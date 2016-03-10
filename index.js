@@ -1,5 +1,6 @@
 var Plugin = require('broccoli-caching-writer');
 var shell = require('shelljs');
+var fs = require('fs');
 
 require('colors').setTheme({
   info: 'grey',
@@ -24,8 +25,13 @@ function ScssLinter(inputNodes, options) {
 ScssLinter.prototype.build = function() {
   var options = this.options;
   this.inputPaths.forEach(function(inputPath) {
+    if (fs.statSync(inputPath).isDirectory() && inputPath.slice(-1) !== '/') {
+      inputPath += '/';
+    }
+
     var result = shell.exec(buildCommand(inputPath, options), {silent: true});
     console.log(formatOutput(result.stdout, inputPath));
+
     if (result.code === 2) {
       throw new Error('There are errors in your SCSS files');
     }
