@@ -26,7 +26,7 @@ ScssLinter.prototype.build = function() {
   var options = this.options;
   this.inputPaths.forEach(function(inputPath) {
     if (fs.statSync(inputPath).isDirectory() && inputPath.slice(-1) !== '/') {
-      inputPath += '/';
+      inputPath += '/**/*';
     }
 
     var result = shell.exec(buildCommand(inputPath, options), {silent: true});
